@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>HTML Muslim Club.System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #050505; overflow: hidden; perspective: 1000px; }
+        .card { transition: transform 0.1s ease-out; transform-style: preserve-3d; }
+        .glow { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(29,78,216,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 0; transform: translate(-50%, -50%); }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col items-center justify-center p-6">
+    <div class="glow" id="glow"></div>
+
+    <nav class="absolute top-0 w-full p-8 flex justify-between items-center z-50">
+        <div class="text-xs tracking-[0.5em] text-zinc-600 font-bold uppercase">System.v1</div>
+        <a href="admin.html" class="text-xs tracking-widest text-zinc-400 hover:text-white transition uppercase border-b border-zinc-800 hover:border-white pb-1">Admin Access</a>
+    </nav>
+
+    <h1 class="text-7xl font-black mb-16 tracking-tighter italic italic bg-gradient-to-b from-white to-zinc-800 bg-clip-text text-transparent">VAULT</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl z-10">
+        <a href="person.html?id=lou&name=劉寶俊" class="card group bg-white/5 border border-white/10 p-12 rounded-[40px] text-center hover:border-blue-500 transition-all">
+            <h2 class="text-3xl font-bold group-hover:scale-110 transition">劉寶俊</h2>
+        </a>
+        <a href="person.html?id=peter&name=陳彼得" class="card group bg-white/5 border border-white/10 p-12 rounded-[40px] text-center hover:border-purple-500 transition-all">
+            <h2 class="text-3xl font-bold group-hover:scale-110 transition">陳彼得</h2>
+        </a>
+        <a href="person.html?id=yuan&name=袁底褲" class="card group bg-white/5 border border-white/10 p-12 rounded-[40px] text-center hover:border-pink-500 transition-all">
+            <h2 class="text-3xl font-bold group-hover:scale-110 transition">袁底褲</h2>
+        </a>
+        <div class="bg-black/50 border border-dashed border-white/5 p-12 rounded-[40px] text-center opacity-30">
+            <h2 class="text-xl italic">Coming Soon</h2>
+        </div>
+    </div>
+
+    <script>
+        const glow = document.getElementById('glow');
+        const cards = document.querySelectorAll('.card');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+            const x = (window.innerWidth / 2 - e.clientX) / 30;
+            const y = (window.innerHeight / 2 - e.clientY) / 30;
+            cards.forEach(c => c.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`);
+        });
+    </script>
+</body>
+</html>
