@@ -2,41 +2,32 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#050505] text-white min-h-screen flex items-center justify-center p-6">
-    
-    <!-- 登入表單 -->
-    <div id="login-zone" class="w-full max-w-md bg-zinc-900 p-10 rounded-[30px] border border-white/10 shadow-2xl">
-        <h1 class="text-2xl font-black mb-8 italic text-blue-500">RESTRICTED ACCESS</h1>
-        <input type="text" id="u" placeholder="Admin ID" class="w-full bg-black p-4 rounded-2xl mb-4 border border-white/5 outline-none focus:border-blue-500">
-        <input type="password" id="p" placeholder="Password" class="w-full bg-black p-4 rounded-2xl mb-8 border border-white/5 outline-none focus:border-blue-500">
-        <button onclick="login()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold hover:bg-blue-500 transition uppercase tracking-widest">Login System</button>
+<body class="bg-[#050505] text-white min-h-screen flex items-center justify-center p-4">
+    <div id="login-zone" class="w-full max-w-md bg-zinc-900 p-8 rounded-[30px] border border-white/10 shadow-2xl">
+        <h1 class="text-xl font-bold mb-6 italic text-blue-500">SECURE ACCESS</h1>
+        <input type="text" id="u" placeholder="ID" class="w-full bg-black p-4 rounded-2xl mb-4 border border-white/5 outline-none">
+        <input type="password" id="p" placeholder="KEY" class="w-full bg-black p-4 rounded-2xl mb-6 border border-white/5 outline-none">
+        <button onclick="login()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold uppercase">Login</button>
     </div>
 
-    <!-- 上傳介面 -->
-    <div id="upload-zone" class="hidden w-full max-w-2xl bg-zinc-900 p-10 rounded-[30px] border border-white/10 shadow-2xl">
-        <div class="flex justify-between items-center mb-10">
-            <h1 class="text-2xl font-black italic">ADMIN_PANEL</h1>
-            <a href="index.html" class="text-xs text-zinc-500 border border-zinc-800 px-4 py-2 rounded-full hover:bg-white hover:text-black transition">Exit to Site</a>
+    <div id="upload-zone" class="hidden w-full max-w-xl bg-zinc-900 p-8 rounded-[30px] border border-white/10 shadow-2xl">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-xl font-bold italic">ADMIN PANEL</h1>
+            <a href="/" class="text-[10px] text-zinc-500 border border-zinc-800 px-3 py-1 rounded-full uppercase">Home</a>
         </div>
-        
         <div class="space-y-6">
-            <div>
-                <label class="block text-xs font-bold text-zinc-500 mb-2 uppercase">Target Gallery</label>
-                <select id="target" class="w-full bg-black p-4 rounded-2xl border border-white/5">
-                    <option value="lou">劉寶俊</option>
-                    <option value="peter">陳彼得</option>
-                    <option value="yuan">袁底褲</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-zinc-500 mb-2 uppercase">Select Media (Image/Video)</label>
-                <input type="file" id="file" class="w-full bg-black p-4 rounded-2xl border border-white/5 text-sm file:bg-blue-600 file:border-0 file:rounded-md file:text-white file:px-4 file:py-1">
-            </div>
-            <button onclick="upload()" id="upBtn" class="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-[0.2em] hover:bg-blue-500 hover:text-white transition">Execute Upload</button>
-            <p id="status" class="text-center text-sm font-mono text-zinc-500 mt-4"></p>
+            <select id="target" class="w-full bg-black p-4 rounded-2xl border border-white/5">
+                <option value="lou">劉寶俊</option>
+                <option value="peter">陳彼得</option>
+                <option value="yuan">袁底褲</option>
+            </select>
+            <input type="file" id="file" class="w-full bg-black p-4 rounded-2xl border border-white/5 text-sm file:bg-blue-600 file:border-0 file:rounded-md file:text-white file:px-3">
+            <button onclick="upload()" id="upBtn" class="w-full bg-white text-black py-4 rounded-2xl font-black uppercase tracking-widest">Execute Upload</button>
+            <p id="status" class="text-center text-[10px] font-mono text-zinc-500 uppercase"></p>
         </div>
     </div>
 
@@ -52,22 +43,19 @@
             if(res.ok) {
                 document.getElementById('login-zone').style.display = 'none';
                 document.getElementById('upload-zone').classList.remove('hidden');
-            } else { alert("Access Denied"); }
+            } else { alert("Denied"); }
         }
 
         async function upload() {
             const file = document.getElementById('file').files[0];
-            if(!file) return alert("Select a file");
+            if(!file) return alert("No file");
             const btn = document.getElementById('upBtn');
             const status = document.getElementById('status');
-            
             const fd = new FormData();
             fd.append('person', document.getElementById('target').value);
             fd.append('file', file);
-
             btn.disabled = true;
-            status.innerText = "UPLOADING TO CLOUD...";
-
+            status.innerText = "Transmitting...";
             const res = await fetch('/api/upload', { method: 'POST', body: fd });
             status.innerText = await res.text();
             btn.disabled = false;

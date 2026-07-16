@@ -14,14 +14,13 @@ cloudinary.config({
   api_secret: 'pOTVzwvxDOQ57PVpL_re7qgqdz8' 
 });
 
-// 設定 Multer 儲存引擎
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
     return {
       folder: 'vault_media',
       resource_type: 'auto',
-      tags: req.body.person // 上傳時自動掛上對象標籤
+      tags: req.body.person // 這裡會抓取前端傳來的對象 (lou, peter, yuan)
     };
   },
 });
@@ -29,15 +28,16 @@ const upload = multer({ storage: storage });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// 重要：確保伺服器知道 public 資料夾在哪
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(session({ 
-    secret: 'vault-system-secret', 
+    secret: 'secure-vault-key', 
     resave: false, 
-    saveUninitialized: true,
-    cookie: { maxAge: 3600000 } // 登入有效期 1 小時
+    saveUninitialized: true 
 }));
 
-// 登入驗證 - 密碼留在後端，前端看不到
+// 登入驗證
 app.post('/api/login', (req, res) => {
     const { user, pass } = req.body;
     if (user === 'admin999' && pass === '12345678') {
@@ -48,15 +48,15 @@ app.post('/api/login', (req, res) => {
     }
 });
 
-// 上傳檔案 API
+// 上傳檔案
 app.post('/api/upload', (req, res, next) => {
     if (!req.session.isAdmin) return res.status(403).send('Unauthorized');
     next();
 }, upload.single('file'), (req, res) => {
-    res.send('Successfully Uploaded to Cloudinary!');
+    res.send('Successfully Uploaded!');
 });
 
-// 獲取媒體清單 API (同時抓取照片與影片)
+// 獲取檔案清單
 app.get('/api/media/:tag', async (req, res) => {
     try {
         const tag = req.params.tag;
@@ -70,5 +70,13 @@ app.get('/api/media/:tag', async (req, res) => {
     }
 });
 
+// 指向主頁面 (防止手機出現 Not Found)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// 修改這裡以適應 Render 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server: http://localhost:${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is Live on port ${PORT}`);
+});
