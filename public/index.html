@@ -6,40 +6,29 @@
     <title>Private Vault</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 1. 強制背景圖片鋪滿 */
-        #bg-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 關鍵：確保圖片在手機上不變形並填滿 */
-            z-index: -10; /* 放在最底層 */
-        }
-
-        /* 2. 遮罩層（讓圖片暗一點，字才清楚） */
-        .bg-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* 40% 黑色遮罩 */
-            z-index: -5;
-        }
-
+        /* 直接用 CSS 設定背景，指向雲端網址 */
         body { 
             margin: 0;
-            background-color: black; /* 如果圖片還沒載入，先顯示黑色 */
+            background: #000 url('https://res.cloudinary.com/zbbtbbtx/image/upload/v1784293336/bp_ynhy1e.jpg') no-repeat center center fixed;
+            background-size: cover;
             color: white;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* 毛玻璃效果卡片 */
+        /* 遮罩層 */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: -1;
+        }
+
+        /* 毛玻璃效果 */
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px); /* 支援 iPhone */
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -48,10 +37,6 @@
 </head>
 <body class="flex flex-col items-center justify-center p-6">
 
-    <!-- 直接使用 img 標籤當背景，這是最穩定的做法 -->
-    <img src="/bg.jpg" id="bg-image" alt="background">
-    
-    <!-- 遮罩 -->
     <div class="bg-overlay"></div>
 
     <nav class="absolute top-0 w-full p-6 flex justify-between items-center z-50">
@@ -65,23 +50,18 @@
         <a href="person.html?id=lou&name=劉寶俊" class="card glass-card group p-10 rounded-[40px] text-center">
             <h2 class="text-2xl font-bold group-hover:scale-110 transition">劉寶俊</h2>
         </a>
-        
         <a href="person.html?id=peter&name=陳彼得" class="card glass-card group p-10 rounded-[40px] text-center">
             <h2 class="text-2xl font-bold group-hover:scale-110 transition">陳彼得</h2>
         </a>
-        
         <a href="person.html?id=yuan&name=袁底褲" class="card glass-card group p-10 rounded-[40px] text-center">
             <h2 class="text-2xl font-bold group-hover:scale-110 transition">袁底褲</h2>
         </a>
-
         <a href="person.html?id=hu&name=胡衣架" class="card glass-card group p-10 rounded-[40px] text-center">
             <h2 class="text-2xl font-bold group-hover:scale-110 transition">胡衣架</h2>
         </a>
-
         <a href="map.html" class="card glass-card group p-10 rounded-[40px] text-center">
             <h2 class="text-2xl font-bold group-hover:scale-110 transition text-orange-400">大家樂定位</h2>
         </a>
-
         <div class="glass-card p-10 rounded-[40px] text-center opacity-30">
             <h2 class="text-xl italic">Future</h2>
         </div>
