@@ -7,27 +7,38 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#050505] text-white min-h-screen flex items-center justify-center p-4">
+    <!-- 登入區域 -->
     <div id="login-zone" class="w-full max-w-md bg-zinc-900 p-8 rounded-[30px] border border-white/10 shadow-2xl">
-        <h1 class="text-xl font-bold mb-6 italic text-blue-500">SECURE ACCESS</h1>
-        <input type="text" id="u" placeholder="ID" class="w-full bg-black p-4 rounded-2xl mb-4 border border-white/5 outline-none">
-        <input type="password" id="p" placeholder="KEY" class="w-full bg-black p-4 rounded-2xl mb-6 border border-white/5 outline-none">
-        <button onclick="login()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold uppercase">Login</button>
+        <h1 class="text-xl font-bold mb-6 italic text-blue-500 uppercase tracking-tighter">Secure Access</h1>
+        <input type="text" id="u" placeholder="ID" class="w-full bg-black p-4 rounded-2xl mb-4 border border-white/5 outline-none focus:border-blue-500 transition">
+        <input type="password" id="p" placeholder="KEY" class="w-full bg-black p-4 rounded-2xl mb-6 border border-white/5 outline-none focus:border-blue-500 transition">
+        <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-bold uppercase transition">Login</button>
     </div>
 
+    <!-- 上傳區域 -->
     <div id="upload-zone" class="hidden w-full max-w-xl bg-zinc-900 p-8 rounded-[30px] border border-white/10 shadow-2xl">
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-xl font-bold italic">ADMIN PANEL</h1>
-            <a href="/" class="text-[10px] text-zinc-500 border border-zinc-800 px-3 py-1 rounded-full uppercase">Home</a>
+            <a href="index.html" class="text-[10px] text-zinc-500 border border-zinc-800 px-3 py-1 rounded-full uppercase">Back to Home</a>
         </div>
         <div class="space-y-6">
-            <select id="target" class="w-full bg-black p-4 rounded-2xl border border-white/5">
-                <option value="lou">劉寶俊</option>
-                <option value="peter">陳彼得</option>
-                <option value="yuan">袁底褲</option>
-            </select>
-            <input type="file" id="file" class="w-full bg-black p-4 rounded-2xl border border-white/5 text-sm file:bg-blue-600 file:border-0 file:rounded-md file:text-white file:px-3">
-            <button onclick="upload()" id="upBtn" class="w-full bg-white text-black py-4 rounded-2xl font-black uppercase tracking-widest">Execute Upload</button>
-            <p id="status" class="text-center text-[10px] font-mono text-zinc-500 uppercase"></p>
+            <div class="space-y-2">
+                <label class="text-[10px] text-zinc-500 uppercase ml-2 font-bold">Select Target Person</label>
+                <select id="target" class="w-full bg-black p-4 rounded-2xl border border-white/5 outline-none">
+                    <option value="lou">劉寶俊</option>
+                    <option value="peter">陳彼得</option>
+                    <option value="yuan">袁底褲</option>
+                    <option value="hu">胡衣架</option>
+                </select>
+            </div>
+            
+            <div class="space-y-2">
+                <label class="text-[10px] text-zinc-500 uppercase ml-2 font-bold">Choose Media File</label>
+                <input type="file" id="file" class="w-full bg-black p-4 rounded-2xl border border-white/5 text-sm file:bg-zinc-800 file:border-0 file:rounded-md file:text-white file:px-3 file:mr-4 file:text-[10px] file:uppercase">
+            </div>
+
+            <button onclick="upload()" id="upBtn" class="w-full bg-white text-black py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-zinc-200 transition">Execute Upload</button>
+            <p id="status" class="text-center text-[10px] font-mono text-zinc-500 uppercase animate-pulse"></p>
         </div>
     </div>
 
@@ -43,21 +54,34 @@
             if(res.ok) {
                 document.getElementById('login-zone').style.display = 'none';
                 document.getElementById('upload-zone').classList.remove('hidden');
-            } else { alert("Denied"); }
+            } else { alert("Access Denied"); }
         }
 
         async function upload() {
             const file = document.getElementById('file').files[0];
-            if(!file) return alert("No file");
+            if(!file) return alert("Please select a file first");
+            
             const btn = document.getElementById('upBtn');
             const status = document.getElementById('status');
             const fd = new FormData();
+            
             fd.append('person', document.getElementById('target').value);
             fd.append('file', file);
+            
             btn.disabled = true;
-            status.innerText = "Transmitting...";
-            const res = await fetch('/api/upload', { method: 'POST', body: fd });
-            status.innerText = await res.text();
+            status.innerText = "Transmitting to Cloud...";
+            
+            try {
+                const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                if(res.ok) {
+                    status.innerText = "Upload Completed Successfully";
+                    document.getElementById('file').value = ""; // 清空檔案選擇
+                } else {
+                    status.innerText = "Upload Failed";
+                }
+            } catch (e) {
+                status.innerText = "Error Occurred";
+            }
             btn.disabled = false;
         }
     </script>
