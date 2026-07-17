@@ -5,16 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            background: url('bg.jpg') no-repeat center center fixed; 
+            background-size: cover; 
+        }
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6); /* 進入相簿後遮罩深一點，看圖更清楚 */
+            z-index: -1;
+        }
+        .glass-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
-<body class="bg-[#050505] text-white min-h-screen p-6">
+<body class="text-white min-h-screen p-6">
+    <div class="bg-overlay"></div>
     <div class="max-w-6xl mx-auto">
-        <a href="/" class="text-zinc-600 hover:text-white uppercase text-[10px] tracking-widest font-bold">← Home</a>
-        <h1 id="pname" class="text-4xl md:text-6xl font-black mt-8 mb-12 tracking-tighter uppercase">Vault</h1>
+        <a href="/" class="text-zinc-400 hover:text-white uppercase text-[10px] tracking-widest font-bold">← Home</a>
+        <h1 id="pname" class="text-5xl md:text-7xl font-black mt-8 mb-12 tracking-tighter uppercase drop-shadow-2xl">Vault</h1>
         <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <p id="loading" class="col-span-full text-zinc-800 italic animate-pulse">Scanning Cloud...</p>
+            <p id="loading" class="col-span-full text-white/20 italic animate-pulse">Scanning Cloud...</p>
         </div>
     </div>
     <script>
+        // ... 保持原本的 load() 腳本不變 ...
         const params = new URLSearchParams(window.location.search);
         const tag = params.get('id');
         document.getElementById('pname').innerText = params.get('name') || "Vault";
@@ -25,16 +44,16 @@
             const container = document.getElementById('gallery');
             document.getElementById('loading').style.display = 'none';
             if(files.length === 0) {
-                container.innerHTML = '<p class="text-zinc-800 font-bold uppercase">Empty Archive.</p>';
+                container.innerHTML = '<p class="text-white/20 font-bold uppercase">Empty Archive.</p>';
                 return;
             }
             files.forEach(f => {
                 const div = document.createElement('div');
-                div.className = "bg-zinc-900 rounded-3xl overflow-hidden border border-white/5";
+                div.className = "glass-box rounded-[30px] overflow-hidden shadow-2xl";
                 if(f.resource_type === "video") {
-                    div.innerHTML = `<video src="${f.secure_url}" controls class="w-full h-64 object-cover"></video>`;
+                    div.innerHTML = `<video src="${f.secure_url}" controls class="w-full h-72 object-cover"></video>`;
                 } else {
-                    div.innerHTML = `<img src="${f.secure_url}" class="w-full h-64 object-cover">`;
+                    div.innerHTML = `<img src="${f.secure_url}" class="w-full h-72 object-cover">`;
                 }
                 container.appendChild(div);
             });

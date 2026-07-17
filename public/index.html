@@ -6,63 +6,76 @@
     <title>Private Vault</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #050505; overflow-x: hidden; perspective: 1000px; }
+        /* 背景圖設定 */
+        body { 
+            background: url('bg.jpg') no-repeat center center fixed; 
+            background-size: cover; /* 讓圖片填滿螢幕 */
+            overflow-x: hidden; 
+            perspective: 1000px; 
+        }
+        /* 增加一個深色遮罩，確保文字看得清楚 */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4); /* 40% 的黑色遮罩 */
+            z-index: -1;
+        }
+        /* 半透明毛玻璃卡片 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); /* 模糊效果 */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
         .card { transition: transform 0.2s ease-out; transform-style: preserve-3d; }
-        .glow { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(29,78,216,0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 0; transform: translate(-50%, -50%); }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col items-center justify-center p-6">
-    <div class="glow" id="glow"></div>
+    <div class="bg-overlay"></div>
     
     <nav class="absolute top-0 w-full p-6 flex justify-between items-center z-50">
-        <div class="text-[10px] tracking-[0.5em] text-zinc-600 font-bold uppercase">System.Live</div>
-        <a href="admin.html" class="text-[10px] tracking-widest text-zinc-500 hover:text-white transition uppercase border border-zinc-800 px-4 py-1 rounded-full">Admin Access</a>
+        <div class="text-[10px] tracking-[0.5em] text-zinc-300 font-bold uppercase">System.Live</div>
+        <a href="admin.html" class="text-[10px] tracking-widest text-zinc-300 hover:text-white transition uppercase border border-white/20 px-4 py-1 rounded-full bg-black/20">Admin Access</a>
     </nav>
 
-    <h1 class="text-5xl md:text-7xl font-black mb-12 italic tracking-tighter bg-gradient-to-b from-white to-zinc-700 bg-clip-text text-transparent">VAULT</h1>
+    <h1 class="text-6xl md:text-8xl font-black mb-12 italic tracking-tighter text-white drop-shadow-2xl">VAULT</h1>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl z-10">
-        <!-- 成員 1 -->
-        <a href="person.html?id=lou&name=劉寶俊" class="card group bg-white/5 border border-white/10 p-10 rounded-[30px] text-center hover:border-blue-500">
-            <h2 class="text-2xl font-bold group-hover:scale-110 transition">劉寶俊</h2>
+        <a href="person.html?id=lou&name=劉寶俊" class="card glass-card group p-10 rounded-[40px] text-center">
+            <h2 class="text-2xl font-bold group-hover:scale-110 transition drop-shadow-md">劉寶俊</h2>
         </a>
         
-        <!-- 成員 2 -->
-        <a href="person.html?id=peter&name=陳彼得" class="card group bg-white/5 border border-white/10 p-10 rounded-[30px] text-center hover:border-purple-500">
-            <h2 class="text-2xl font-bold group-hover:scale-110 transition">陳彼得</h2>
+        <a href="person.html?id=peter&name=陳彼得" class="card glass-card group p-10 rounded-[40px] text-center">
+            <h2 class="text-2xl font-bold group-hover:scale-110 transition drop-shadow-md">陳彼得</h2>
         </a>
         
-        <!-- 成員 3 -->
-        <a href="person.html?id=yuan&name=袁底褲" class="card group bg-white/5 border border-white/10 p-10 rounded-[30px] text-center hover:border-pink-500">
-            <h2 class="text-2xl font-bold group-hover:scale-110 transition">袁底褲</h2>
+        <a href="person.html?id=yuan&name=袁底褲" class="card glass-card group p-10 rounded-[40px] text-center">
+            <h2 class="text-2xl font-bold group-hover:scale-110 transition drop-shadow-md">袁底褲</h2>
         </a>
 
-        <!-- 成員 4: 新增胡衣架 -->
-        <a href="person.html?id=hu&name=胡衣架" class="card group bg-white/5 border border-white/10 p-10 rounded-[30px] text-center hover:border-yellow-500">
-            <h2 class="text-2xl font-bold group-hover:scale-110 transition">胡衣架</h2>
+        <a href="person.html?id=hu&name=胡衣架" class="card glass-card group p-10 rounded-[40px] text-center">
+            <h2 class="text-2xl font-bold group-hover:scale-110 transition drop-shadow-md">胡衣架</h2>
         </a>
 
-        <!-- 大家樂地圖功能 -->
-        <a href="map.html" class="card group bg-orange-500/5 border border-orange-500/20 p-10 rounded-[30px] text-center hover:border-orange-500">
-            <h2 class="text-2xl font-bold group-hover:scale-110 transition text-orange-500">大家樂定位</h2>
-            <p class="text-[10px] text-orange-500/50 mt-1 uppercase tracking-widest font-bold">Café de Coral</p>
+        <a href="map.html" class="card glass-card group p-10 rounded-[40px] text-center border-orange-500/30">
+            <h2 class="text-2xl font-bold group-hover:scale-110 transition text-orange-400 drop-shadow-md">大家樂定位</h2>
         </a>
 
-        <!-- 未來佔位符 -->
-        <div class="bg-black/50 border border-dashed border-white/5 p-10 rounded-[30px] text-center opacity-20">
+        <div class="glass-card p-10 rounded-[40px] text-center opacity-30">
             <h2 class="text-xl italic">Future</h2>
         </div>
     </div>
 
     <script>
-        const glow = document.getElementById('glow');
         const cards = document.querySelectorAll('.card');
         document.addEventListener('mousemove', (e) => {
-            glow.style.left = e.clientX + 'px';
-            glow.style.top = e.clientY + 'px';
             if(window.innerWidth > 768) {
-                const x = (window.innerWidth / 2 - e.clientX) / 30;
-                const y = (window.innerHeight / 2 - e.clientY) / 30;
+                const x = (window.innerWidth / 2 - e.clientX) / 40;
+                const y = (window.innerHeight / 2 - e.clientY) / 40;
                 cards.forEach(c => c.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`);
             }
         });
