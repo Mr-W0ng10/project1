@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大家樂 Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { background: #050505; color: white; }
+        #map { height: 50vh; width: 100%; border-radius: 24px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        /* 地圖深色濾鏡 */
+        .leaflet-tile { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
+    </style>
+</head>
+<body class="p-6 flex flex-col items-center min-h-screen">
+    <div class="max-w-4xl w-full">
+        <a href="/" class="text-zinc-600 hover:text-white uppercase text-[10px] tracking-widest font-bold">← Back to Vault</a>
+        <h1 class="text-4xl font-black mt-6 italic text-orange-500 tracking-tighter">NEARBY CAFÉ DE CORAL</h1>
+        <p id="status" class="text-zinc-500 text-xs mt-2 font-mono uppercase">Requesting GPS Access...</p>
+        
+        <div id="map"></div>
+        
+        <div class="mt-8 space-y-4" id="list">
+            <!-- 列表會顯示在這裡 -->
+        </div>
+    </div>
+
+    <script>
+        const status = document.getElementById('status');
+        const list = document.getElementById('list');
+        let map = L.map('map').setView([22.3193, 114.1694], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        } else {
+            status.innerText = "Error: Geolocation not supported.";
+        }
+
+        async function onSuccess(pos) {
+            const { latitude: lat, longitude: lon } = pos.coords;
+            status.innerText = "Location Found. Searching Archive...";
+            map.setView([lat, lon], 15);
+            L.marker([lat, lon]).addTo(map).bindPopup("You are here").openPopup();
+
+            // 搜尋大家樂的 Overpass API
+            const query = `[out:json];(node["name"~"大家樂|Café de Coral"](around:3000,${lat},${lon});way["name"~"大家樂|Café de Coral"](around:3000,${lat},${lon}););out center;`;
+            const url = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(query);
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                if (data.elements.length === 0) {
+                    status.innerText = "No results found within 3km.";
+                    return;
+                }
+
+                status.innerText = `Found ${data.elements.length} stores nearby.`;
+                data.elements.forEach(item => {
+                    const itemLat = item.lat || item.center.lat;
+                    const itemLon = item.lon || item.center.lon;
+                    const name = item.tags.name || "大家樂 Café de Coral";
+
+                    L.circleMarker([itemLat, itemLon], { color: '#f97316', radius: 10 }).addTo(map).bindPopup(name);
+
+                    const div = document.createElement('div');
+                    div.className = "bg-zinc-900/50 p-6 rounded-[20px] border border-white/5 hover:border-orange-500/50 transition cursor-pointer";
+                    div.innerHTML = `<h3 class="font-bold text-orange-500">${name}</h3><p class="text-[10px] text-zinc-500 uppercase mt-1">Tap to focus on map</p>`;
+                    div.onclick = () => map.setView([itemLat, itemLon], 18);
+                    list.appendChild(div);
+                });
+            } catch (e) {
+                status.innerText = "Search Failed.";
+            }
+        }
+
+        function onError() { status.innerText = "GPS Denied."; }
+    </script>
+</body>
+</html>

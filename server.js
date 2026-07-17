@@ -7,7 +7,7 @@ const path = require('path');
 
 const app = express();
 
-// 你的 Cloudinary 配置
+// Cloudinary 配置 (保留你原本的設定)
 cloudinary.config({ 
   cloud_name: 'zbbtbbtx', 
   api_key: '796263538645272', 
@@ -20,7 +20,7 @@ const storage = new CloudinaryStorage({
     return {
       folder: 'vault_media',
       resource_type: 'auto',
-      tags: req.body.person // 這裡會抓取前端傳來的對象 (lou, peter, yuan)
+      tags: req.body.person 
     };
   },
 });
@@ -28,7 +28,6 @@ const upload = multer({ storage: storage });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// 重要：確保伺服器知道 public 資料夾在哪
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({ 
@@ -70,12 +69,11 @@ app.get('/api/media/:tag', async (req, res) => {
     }
 });
 
-// 指向主頁面 (防止手機出現 Not Found)
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// 路由設定：優先匹配靜態檔案，若無則指向首頁
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
+app.get('/map', (req, res) => res.sendFile(path.join(__dirname, 'public', 'map.html')));
 
-// 修改這裡以適應 Render 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is Live on port ${PORT}`);

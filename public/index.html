@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Private Vault</title>
+    <title>我操你媽</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #050505; overflow-x: hidden; perspective: 1000px; }
@@ -15,9 +15,11 @@
     <div class="glow" id="glow"></div>
     <nav class="absolute top-0 w-full p-6 flex justify-between items-center z-50">
         <div class="text-[10px] tracking-[0.5em] text-zinc-600 font-bold uppercase">System.Live</div>
-        <a href="admin.html" class="text-[10px] tracking-widest text-zinc-500 hover:text-white transition uppercase">Admin Access</a>
+        <a href="/admin" class="text-[10px] tracking-widest text-zinc-500 hover:text-white transition uppercase">Admin Access</a>
     </nav>
+    
     <h1 class="text-5xl md:text-7xl font-black mb-12 italic tracking-tighter bg-gradient-to-b from-white to-zinc-700 bg-clip-text text-transparent">VAULT</h1>
+    
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl z-10">
         <a href="person.html?id=lou&name=劉寶俊" class="card group bg-white/5 border border-white/10 p-10 rounded-[30px] text-center hover:border-blue-500">
             <h2 class="text-2xl font-bold group-hover:scale-110 transition">劉寶俊</h2>
@@ -28,10 +30,14 @@
         <a href="person.html?id=yuan&name=袁底褲" class="card group bg-white/5 border border-white/10 p-10 rounded-[30px] text-center hover:border-pink-500">
             <h2 class="text-2xl font-bold group-hover:scale-110 transition">袁底褲</h2>
         </a>
-        <div class="bg-black/50 border border-dashed border-white/5 p-10 rounded-[30px] text-center opacity-20">
-            <h2 class="text-xl italic">Future</h2>
-        </div>
+        
+        <!-- 新增的地圖功能卡片 -->
+        <a href="/map" class="card group bg-white/5 border border-white/10 p-10 rounded-[30px] text-center hover:border-orange-500">
+            <h2 class="text-2xl font-bold group-hover:scale-110 transition text-orange-500">大家樂定位</h2>
+            <p class="text-[10px] text-zinc-500 mt-1 uppercase tracking-widest">Find Café de Coral Nearby</p>
+        </a>
     </div>
+
     <script>
         const glow = document.getElementById('glow');
         const cards = document.querySelectorAll('.card');
