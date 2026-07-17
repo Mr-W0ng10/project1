@@ -7,19 +7,36 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
-            background: url('bg.jpg') no-repeat center center fixed; 
-            background-size: cover; 
+            margin: 0;
+            padding: 0;
+            /* 先給一個深灰色當底，避免圖片跑不出來時全白 */
+            background-color: #1a1a1a; 
+            
+            /* 背景圖設定 */
+            background-image: url('bg.jpg'); 
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            background-size: cover;
+
+            overflow-x: hidden; 
+            perspective: 1000px; 
         }
+
         .bg-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6); /* 進入相簿後遮罩深一點，看圖更清楚 */
+            /* 如果背景圖太亮，調整這裡的 0.5 (50% 黑色遮罩) */
+            background: rgba(0, 0, 0, 0.5); 
             z-index: -1;
         }
-        .glass-box {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); /* 為了支援手機 Safari */
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
     </style>
 </head>
